@@ -1,12 +1,18 @@
 package com.example.alessander.helicoptergame;
 
 import android.content.Context;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
+import android.graphics.Canvas;
 import android.view.MotionEvent;
 import android.view.SurfaceHolder;
 import android.view.SurfaceView;
 
 public class GamePanel extends SurfaceView implements SurfaceHolder.Callback {
+    public static final int WIDTH = 856;
+    public static final int HEIGHT = 480;
     private MainThread thread;
+    private Background bg;
 
     public GamePanel(Context context) {
         super(context);
@@ -16,6 +22,7 @@ public class GamePanel extends SurfaceView implements SurfaceHolder.Callback {
 
         thread = new MainThread(getHolder(), this);
 
+        //make gamePanel focusable so it can hanble events
         setFocusable(true);
     }
 
@@ -33,15 +40,18 @@ public class GamePanel extends SurfaceView implements SurfaceHolder.Callback {
                 thread.join();
             } catch (InterruptedException e) {
                 e.printStackTrace();
-                retry = false;
             }
+            retry = false;
         }
     }
 
     @Override
     public void surfaceCreated(SurfaceHolder holder) {
 
-        //safely start the game loop
+        bg = new Background(BitmapFactory.decodeResource(getResources(), R.drawable.grassbg1));
+        bg.setVector(-5);
+
+        //we can safely start the game loop
         thread.setRunning(true);
         thread.start();
     }
@@ -52,6 +62,12 @@ public class GamePanel extends SurfaceView implements SurfaceHolder.Callback {
     }
 
     public void update() {
+        bg.update();
+    }
 
+    @Override
+    public void draw(Canvas canvas) {
+        super.draw(canvas);
+        bg.draw(canvas);
     }
 }
