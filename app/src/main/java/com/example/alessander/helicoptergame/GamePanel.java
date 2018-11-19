@@ -1,7 +1,6 @@
 package com.example.alessander.helicoptergame;
 
 import android.content.Context;
-import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Canvas;
 import android.view.MotionEvent;
@@ -33,6 +32,7 @@ public class GamePanel extends SurfaceView implements SurfaceHolder.Callback {
 
     @Override
     public void surfaceDestroyed(SurfaceHolder holder) {
+
         boolean retry = true;
         while (retry) {
             try {
@@ -67,7 +67,16 @@ public class GamePanel extends SurfaceView implements SurfaceHolder.Callback {
 
     @Override
     public void draw(Canvas canvas) {
-        super.draw(canvas);
-        bg.draw(canvas);
+
+
+        final float scaleFactorX = getWidth() / WIDTH;
+        final float scaleFactorY = getHeight() / HEIGHT;
+
+        if (canvas != null) {
+            final int savedState = canvas.save();
+            canvas.scale(scaleFactorX, scaleFactorY);
+            bg.draw(canvas);
+            canvas.restoreToCount(savedState);
+        }
     }
 }
