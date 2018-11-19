@@ -57,7 +57,7 @@ public abstract class GameObject {
     public void setHeight(int height) {
         this.height = height;
     }
-    
+
     public Rect getRectangle() {
         return new Rect(x, y, x + width, y + height);
     }
