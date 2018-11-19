@@ -2,7 +2,6 @@ package com.example.alessander.helicoptergame;
 
 import android.graphics.Bitmap;
 import android.graphics.Canvas;
-import android.view.animation.Animation;
 
 public class Player extends GameObject {
     private Bitmap spritesheet;
