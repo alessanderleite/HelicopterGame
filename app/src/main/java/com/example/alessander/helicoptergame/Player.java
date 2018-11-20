@@ -73,7 +73,7 @@ public class Player extends GameObject {
         playing = b;
     }
 
-    public void resetDYA() {
+    public void resetDY() {
         dy = 0;
     }
 
