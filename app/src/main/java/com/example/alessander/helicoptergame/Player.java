@@ -21,6 +21,7 @@ public class Player extends GameObject {
         width = w;
 
         Bitmap[] image = new Bitmap[numFrames];
+        spritesheet = res;
 
         for (int i = 0; i < image.length; i++) {
             image[i] = Bitmap.createBitmap(spritesheet, i * width, 0, width, height);
@@ -50,8 +51,8 @@ public class Player extends GameObject {
             dy = (int) (dya += 1.1);
         }
 
-        if (dy > 14) dy = 14;
-        if (dy<-14) dy = -14;
+        if (dy > 14)dy = 14;
+        if (dy < -14)dy = -14;
 
         y += dy*2;
         dy = 0;
@@ -65,7 +66,7 @@ public class Player extends GameObject {
         return score;
     }
 
-    public boolean isPlaying() {
+    public boolean getPlaying() {
         return playing;
     }
 

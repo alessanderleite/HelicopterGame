@@ -46,17 +46,17 @@ public abstract class GameObject {
         return width;
     }
 
-    public void setWidth(int width) {
-        this.width = width;
-    }
+//    public void setWidth(int width) {
+//        this.width = width;
+//    }
 
     public int getHeight() {
         return height;
     }
 
-    public void setHeight(int height) {
-        this.height = height;
-    }
+//    public void setHeight(int height) {
+//        this.height = height;
+//    }
 
     public Rect getRectangle() {
         return new Rect(x, y, x + width, y + height);
