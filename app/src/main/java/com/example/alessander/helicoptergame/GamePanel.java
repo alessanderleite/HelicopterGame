@@ -36,14 +36,17 @@ public class GamePanel extends SurfaceView implements SurfaceHolder.Callback {
     public void surfaceDestroyed(SurfaceHolder holder) {
 
         boolean retry = true;
-        while (retry) {
+        int counter = 0;
+        while (retry && counter < 1000) {
+
+            counter++;
             try {
                 thread.setRunning(false);
                 thread.join();
-            } catch (InterruptedException e) {
-                e.printStackTrace();
-            }
-            retry = false;
+                retry = false;
+
+            } catch (InterruptedException e) {e.printStackTrace();}
+
         }
     }
 
