@@ -212,6 +212,18 @@ public class GamePanel extends SurfaceView implements SurfaceHolder.Callback {
                 m.draw(canvas);
             }
             canvas.restoreToCount(savedState);
+
+            //draw topBorder
+            for (TopBorder tb : topborder) {
+
+                tb.draw(canvas);
+            }
+            //draw botBorder
+            for (BotBorder bb : botborder) {
+
+                bb.draw(canvas);
+            }
+
         }
     }
 
