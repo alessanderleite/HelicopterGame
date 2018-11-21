@@ -3,6 +3,7 @@ package com.example.alessander.helicoptergame;
 import android.content.Context;
 import android.graphics.BitmapFactory;
 import android.graphics.Canvas;
+import android.graphics.Rect;
 import android.view.MotionEvent;
 import android.view.SurfaceHolder;
 import android.view.SurfaceView;
@@ -16,7 +17,6 @@ public class GamePanel extends SurfaceView implements SurfaceHolder.Callback {
     public static final int MOVESPEED = -5;
     private long smokeStartTimer;
     private long missileStartTime;
-    private long missileElapsed;
     private MainThread thread;
     private Background bg;
     private Player player;
@@ -99,9 +99,10 @@ public class GamePanel extends SurfaceView implements SurfaceHolder.Callback {
             player.update();
 
             //add missiles on timer
-            long missilesElapsed = (System.nanoTime() - missileStartTime)/1000000;
-            if (missilesElapsed > (2000 - player.getScore()/4)) {
+            long missileElapsed = (System.nanoTime() - missileStartTime)/1000000;
+            if (missileElapsed > (2000 - player.getScore()/4)) {
 
+                System.out.println("making missile");
                 //first missile always goes down the middle
                 if (missiles.size() == 0) {
                     missiles.add(new Missile(BitmapFactory.decodeResource(getResources(), R.drawable
@@ -150,6 +151,15 @@ public class GamePanel extends SurfaceView implements SurfaceHolder.Callback {
         }
     }
 
+    public boolean collision(GameObject a, GameObject b) {
+
+        if (Rect.intersects(a.getRectangle(), b.getRectangle())) {
+
+            return true;
+        }
+        return false;
+    }
+
     @Override
     public void draw(Canvas canvas) {
         super.draw(canvas);
@@ -164,10 +174,16 @@ public class GamePanel extends SurfaceView implements SurfaceHolder.Callback {
             canvas.scale(scaleFactorX, scaleFactorY);
             bg.draw(canvas);
             player.draw(canvas);
+            //draw smokepuffs
             for (Smokepuff sp : smoke) {
+
                 sp.draw(canvas);
             }
+            //draw missiles
+            for (Missile m : missiles) {
 
+                m.draw(canvas);
+            }
             canvas.restoreToCount(savedState);
         }
     }
