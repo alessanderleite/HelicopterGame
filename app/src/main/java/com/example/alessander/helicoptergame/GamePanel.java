@@ -22,7 +22,15 @@ public class GamePanel extends SurfaceView implements SurfaceHolder.Callback {
     private Player player;
     private ArrayList<Smokepuff> smoke;
     private ArrayList<Missile> missiles;
+    private ArrayList<TopBorder> topborder;
+    private ArrayList<BotBorder> botborder;
     private Random rand = new Random();
+    private int maxBorderHeight;
+    private int minBorderHeight;
+    private boolean topDown = true;
+    private boolean botDown = true;
+    //increase to slow down difficulty progression, decrease to speed up difficulty progression
+    private int progressDenom = 20;
 
     public GamePanel(Context context) {
         super(context);
@@ -65,6 +73,8 @@ public class GamePanel extends SurfaceView implements SurfaceHolder.Callback {
         player = new Player(BitmapFactory.decodeResource(getResources(), R.drawable.helicopter),65,25,3);
         smoke = new ArrayList<Smokepuff>();
         missiles = new ArrayList<Missile>();
+        topborder = new ArrayList<TopBorder>();
+        botborder = new ArrayList<BotBorder>();
         smokeStartTimer = System.nanoTime();
         missileStartTime = System.nanoTime();
 
@@ -94,9 +104,26 @@ public class GamePanel extends SurfaceView implements SurfaceHolder.Callback {
     }
 
     public void update() {
+
         if (player.getPlaying()) {
+
             bg.update();
             player.update();
+
+            //calculate the threshold of height the border can hava based on the score
+            //max and min border heart are updated, and the border switched direction when either max or
+            //min is net
+
+            maxBorderHeight = 30 + player.getScore()/progressDenom;
+            //cap max border height so that borders can only take up a total of 1/2 the screen
+            if (maxBorderHeight > HEIGHT/4)maxBorderHeight = HEIGHT/4;
+            minBorderHeight = 5 + player.getScore()/progressDenom;
+            
+            //create top border
+            this.updateTopBorder();
+
+            //create bottom border
+            this.updateBottomBorder();
 
             //add missiles on timer
             long missileElapsed = (System.nanoTime() - missileStartTime)/1000000;
@@ -186,5 +213,13 @@ public class GamePanel extends SurfaceView implements SurfaceHolder.Callback {
             }
             canvas.restoreToCount(savedState);
         }
+    }
+
+    public void updateBottomBorder() {
+
+    }
+
+    public void updateTopBorder() {
+
     }
 }
