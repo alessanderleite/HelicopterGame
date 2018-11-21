@@ -217,9 +217,93 @@ public class GamePanel extends SurfaceView implements SurfaceHolder.Callback {
 
     public void updateBottomBorder() {
 
+        //every 50 points, insert randomly placed top blocks that break the pattern
+        if (player.getScore() % 50 == 0) {
+
+            topborder.add(new TopBorder(BitmapFactory.decodeResource(getResources(), R.drawable.brick
+            ), topborder.get(topborder.size() - 1).getX() + 20, 0, (int)((rand.nextDouble() * (maxBorderHeight
+            ))+1)));
+        }
+
+        for (int i = 0; i < topborder.size(); i++) {
+
+            topborder.get(i).update();
+            if (topborder.get(i).getX() < -20) {
+
+                topborder.remove(i);
+                //remove element of arrayList, replace it by adding a new one
+
+                //calculate topdown which determines the direction the border is moving (up and down)
+                if (topborder.get(topborder.size()-1).getHeight() > +maxBorderHeight) {
+
+                    topDown = false;
+                }
+                if (topborder.get(topborder.size()-1).getHeight() < +minBorderHeight) {
+
+                    topDown = true;
+                }
+                //new border added will have larger height
+                if (topDown) {
+
+                    topborder.add(new TopBorder(BitmapFactory.decodeResource(getResources(),
+                            R.drawable.brick), topborder.get(topborder.size()-1).getX()+20,
+                            0, topborder.get(topborder.size()-1).getHeight()+1));
+                }
+                //new border added will have smaller height
+                else {
+
+                    topborder.add(new TopBorder(BitmapFactory.decodeResource(getResources(),
+                            R.drawable.brick), topborder.get(topborder.size()-1).getX()+20,
+                            0, topborder.get(topborder.size()-1).getHeight()-1));
+                }
+            }
+        }
     }
 
     public void updateTopBorder() {
 
+        //every 40 points, insert randomly placed bottom blocks that break patter
+        if (player.getScore() % 40 == 0) {
+
+            botborder.add(new BotBorder(BitmapFactory.decodeResource(getResources(), R.drawable.brick),
+                    botborder.get(botborder.size()-1).getX()+20, (int)((rand.nextDouble()
+                    * maxBorderHeight) + (HEIGHT - maxBorderHeight))));
+
+        }
+
+        //update bottom border
+        for (int i = 0; i < botborder.size(); i++) {
+
+            botborder.get(i).update();
+
+            //if border is moving off screen, remove it and add a corresponding new one
+            if (botborder.get(i).getX() < - 20) {
+
+                botborder.remove(i);
+            }
+
+            //determine if border width be moving up or down
+            if (botborder.get(botborder.size()-1).getHeight() >= maxBorderHeight) {
+
+                botDown = false;
+            }
+            if (botborder.get(botborder.size()-1).getHeight() <= minBorderHeight) {
+
+                botDown = true;
+            }
+
+            if (botDown) {
+
+                botborder.add(new BotBorder(BitmapFactory.decodeResource(getResources(), R.drawable.brick
+                ), botborder.get(botborder.size()-1).getX()+20, botborder.get(botborder.size()-1
+                ).getY() + 1));
+            }
+            else {
+
+                botborder.add(new BotBorder(BitmapFactory.decodeResource(getResources(), R.drawable.brick
+                ), botborder.get(botborder.size()-1).getX()+20, botborder.get(botborder.size()-1
+                ).getY() - 1));
+            }
+        }
     }
 }
