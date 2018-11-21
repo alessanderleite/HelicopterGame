@@ -8,16 +8,21 @@ import android.view.SurfaceHolder;
 import android.view.SurfaceView;
 
 import java.util.ArrayList;
+import java.util.Random;
 
 public class GamePanel extends SurfaceView implements SurfaceHolder.Callback {
     public static final int WIDTH = 856;
     public static final int HEIGHT = 480;
     public static final int MOVESPEED = -5;
     private long smokeStartTimer;
+    private long missileStartTime;
+    private long missileElapsed;
     private MainThread thread;
     private Background bg;
     private Player player;
     private ArrayList<Smokepuff> smoke;
+    private ArrayList<Missile> missiles;
+    private Random rand = new Random();
 
     public GamePanel(Context context) {
         super(context);
@@ -59,8 +64,9 @@ public class GamePanel extends SurfaceView implements SurfaceHolder.Callback {
         bg = new Background(BitmapFactory.decodeResource(getResources(), R.drawable.grassbg1));
         player = new Player(BitmapFactory.decodeResource(getResources(), R.drawable.helicopter),65,25,3);
         smoke = new ArrayList<Smokepuff>();
-
+        missiles = new ArrayList<Missile>();
         smokeStartTimer = System.nanoTime();
+        missileStartTime = System.nanoTime();
 
         //we can safely start the game loop
         thread.setRunning(true);
@@ -92,6 +98,43 @@ public class GamePanel extends SurfaceView implements SurfaceHolder.Callback {
             bg.update();
             player.update();
 
+            //add missiles on timer
+            long missilesElapsed = (System.nanoTime() - missileStartTime)/1000000;
+            if (missilesElapsed > (2000 - player.getScore()/4)) {
+
+                //first missile always goes down the middle
+                if (missiles.size() == 0) {
+                    missiles.add(new Missile(BitmapFactory.decodeResource(getResources(), R.drawable
+                            .missile), WIDTH + 10, HEIGHT/2, 45, 15, player.getScore(), 13));
+                }
+                else {
+                    missiles.add(new Missile(BitmapFactory.decodeResource(getResources(), R.drawable.missile),
+                            WIDTH + 10, (int)(rand.nextDouble() * (HEIGHT)),45,15, player.getScore(),13));
+                }
+                //reset timer
+                missileStartTime = System.nanoTime();
+            }
+            //loop through every missile and check collision and remove
+            for (int i = 0; i < missiles.size(); i++) {
+
+                //update missile
+                missiles.get(i).update();
+
+                if (collision(missiles.get(i), player)) {
+
+                    missiles.remove(i);
+                    player.setPlaying(false);
+                    break;
+                }
+                //remove missile if it is way off the screen
+                if (missiles.get(i).getX() < -100) {
+
+                    missiles.remove(i);
+                    break;
+                }
+            }
+
+            //add smoke puffs on timer
             long elapsed = (System.nanoTime() - smokeStartTimer) / 1000000;
             if (elapsed > 120) {
                 smoke.add(new Smokepuff(player.getX(), player.getY() + 10));
