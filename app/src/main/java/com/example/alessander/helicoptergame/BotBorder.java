@@ -1,6 +1,5 @@
 package com.example.alessander.helicoptergame;
 
-import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.Canvas;
 
@@ -11,7 +10,7 @@ public class BotBorder extends GameObject {
     public BotBorder(Bitmap res, int x, int y) {
 
         height = 200;
-        width =20;
+        width = 20;
 
         this.x = x;
         this.y = y;
